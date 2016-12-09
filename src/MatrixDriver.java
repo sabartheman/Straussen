@@ -4,16 +4,23 @@ import java.io.PrintWriter;
 import java.util.Random;
 //this class is designed to do matrix math with the brute force technique and straussens algorithm
 
+
 public class MatrixDriver {
     
     public static long bruteTime, optimizedTime,straussen2nTime;
     
+    public static final int LOOP = 9;
+    
     public static Random ran = new Random();
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         
         
-        for(int l = 1;l<12;l++){
+        double[] timeR = new double[LOOP-1];
+        double[] timeB = new double[LOOP-1];
+        int[] powertwo = new int[LOOP-1];
+        
+        for(int l = 1;l<LOOP;l++){
             int power=1;
             for(int b = 0;b<l;b++){
                 power = 2*power;
@@ -26,10 +33,6 @@ public class MatrixDriver {
             for(int j=0;j<third.length;j++){
                 third[i][j]  = ran.nextInt(3);
                 fourth[i][j] = ran.nextInt(3);
-            
-
-                //third[i][j]  = ran.nextInt(10);
-                //fourth[i][j] = ran.nextInt(10);
             }
         }    
         
@@ -39,7 +42,7 @@ public class MatrixDriver {
         long timeF           = System.nanoTime();
         optimizedTime   = timeF-timeS;
         double timeSeconds = optimizedTime/1000000000.000000;
-
+        timeR[l-1] = timeSeconds;
         //System.out.println("The time it took to recursive multiply a 2x2 matrix is: " + optimizedTime + "\nThe result of the recursive time is\n");
         System.out.println("operating time for size "+power+" is "+timeSeconds + "s\n");
         
@@ -49,26 +52,10 @@ public class MatrixDriver {
         timeF = System.nanoTime();
         bruteTime = timeF-timeS;
         timeSeconds = bruteTime/1000000000.000000;
-        
+        timeB[l-1] = timeSeconds;
         System.out.println("operating time for brute force multiplying of size " + power + " is " + timeSeconds + "s\n");
-        
+        powertwo[l-1] = power;
         /*
-        boolean Eflag = true;
-        
-        for(int i = 0;i<third.length;i++){
-            for(int j = 0; j<third.length;j++){
-                if(third[i][j] != fourth[i][j]){
-                    Eflag = false;
-                }
-            }   
-        }
-        */
-        
-        
-        //System.out.println(Eflag);
-        
-        /*
-        
         for(int i =0;i<third.length;i++){
             for(int j=0;j<fourth.length;j++){
                 System.out.print("[" + result3[i][j] + "]");
@@ -81,11 +68,10 @@ public class MatrixDriver {
                 System.out.print("[" + result4[i][j] + "]");
             }
             System.out.println();
-        }
-        
-        */
+        }*/
 
         }
+        writeToFile(timeR,timeB,powertwo);
     }
     ///////////////////////////////////////////////////////////////////////////
     // Brute force method to multiply any NxN matrix together
@@ -275,11 +261,20 @@ public class MatrixDriver {
 
         return c;
     }
-    public static void writeToFile(double[] timeR,double[] timeB, int size) throws FileNotFoundException{
+    public static void writeToFile(double[] timeR,double[] timeB, int[] size) throws FileNotFoundException{
         PrintWriter pw = new PrintWriter(new File("testing.csv"));
         StringBuilder sb = new StringBuilder();
+        sb.append("Size,TimeR,TimeB,\n");
         
+        for(int i = 0; i< timeR.length;i++){
+            sb.append(size[i]+",");
+            sb.append(timeR[i]+",");
+            sb.append(timeB[i]+",\n");
+        }
         
+        pw.print(sb);
+        ///end of file.
+        pw.close();
          
        
     }
