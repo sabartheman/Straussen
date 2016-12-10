@@ -9,7 +9,7 @@ public class MatrixDriver {
     
     public static long bruteTime, optimizedTime,straussen2nTime;
     
-    public static final int LOOP = 9;
+    public static final int LOOP = 12;
     
     public static Random ran = new Random();
     
@@ -38,14 +38,14 @@ public class MatrixDriver {
         
            //a recursive run of multiplication 2x2
         long timeS           = System.nanoTime();
-        int[][] result3 = recursive(third,fourth);
+        int[][] result3 = recursive(third,fourth,power);
         long timeF           = System.nanoTime();
         optimizedTime   = timeF-timeS;
         double timeSeconds = optimizedTime/1000000000.000000;
         timeR[l-1] = timeSeconds;
         //System.out.println("The time it took to recursive multiply a 2x2 matrix is: " + optimizedTime + "\nThe result of the recursive time is\n");
-        System.out.println("operating time for size "+power+" is "+timeSeconds + "s\n");
-        
+        System.out.println("operating time for size "+power+" is "+timeSeconds + " seconds\n");
+        /*
         //brute force run
         timeS = System.nanoTime();
         int[][] result4 =  multiply(third,fourth);
@@ -53,8 +53,10 @@ public class MatrixDriver {
         bruteTime = timeF-timeS;
         timeSeconds = bruteTime/1000000000.000000;
         timeB[l-1] = timeSeconds;
-        System.out.println("operating time for brute force multiplying of size " + power + " is " + timeSeconds + "s\n");
+        System.out.println("operating time for brute force multiplying of size " + power + " is " + timeSeconds + " seconds\n");
+        */
         powertwo[l-1] = power;
+
         /*
         for(int i =0;i<third.length;i++){
             for(int j=0;j<fourth.length;j++){
@@ -99,34 +101,16 @@ public class MatrixDriver {
     // straussens algorithm for multiplying two same size matrices
     // everything below this is for the straussen method
     ///////////////////////////////////////////////////////////////////////////
-    public static int[][] recursive(int[][] a, int[][] b){
+    public static int[][] recursive(int[][] a, int[][] b, int svalue){
         int n = a.length;
 
         int[][] result = new int[n][n];
-
-        if((n%2 != 0 ) && (n !=1)){
-            int[][] a1, b1, c1;
-            int n1 = n+1;
-            a1 = new int[n1][n1];
-            b1 = new int[n1][n1];
-            c1 = new int[n1][n1];
-
-            for(int i=0; i<n; i++)
-                for(int j=0; j<n; j++)
-                {
-                a1[i][j] =a[i][j];
-                b1[i][j] =b[i][j];
-                }
-            c1 = recursive(a1, b1);
-            for(int i=0; i<n; i++)
-                for(int j=0; j<n; j++)
-                result[i][j] =c1[i][j];
-            return result;
-        }
-
+        
         if(n == 1)
         {
                 result[0][0] = a[0][0] * b[0][0];
+        }else if(svalue >= n){
+            result = multiply(a,b);
         }
         else{
 
@@ -154,13 +138,13 @@ public class MatrixDriver {
 
 
         ///anything below here only runs if the matrix is size 2x2
-        int[][] m1 = recursive(add(A00,A11), add(B00,B11));
-        int[][] m2 = recursive(add(A10,A11),B00 );
-        int[][] m3 = recursive(A00, sub(B01,B11));
-        int[][] m4 = recursive(A11,sub(B10,B00) );
-        int[][] m5 = recursive(add(A00,A01),B11 );
-        int[][] m6 = recursive(sub(A10,A00),add(B00,B01));
-        int[][] m7 = recursive(sub(A01,A11),add(B10,B11));
+        int[][] m1 = recursive(add(A00,A11), add(B00,B11),svalue);
+        int[][] m2 = recursive(add(A10,A11),B00 ,svalue);
+        int[][] m3 = recursive(A00, sub(B01,B11),svalue);
+        int[][] m4 = recursive(A11,sub(B10,B00) ,svalue);
+        int[][] m5 = recursive(add(A00,A01),B11 ,svalue);
+        int[][] m6 = recursive(sub(A10,A00),add(B00,B01),svalue);
+        int[][] m7 = recursive(sub(A01,A11),add(B10,B11),svalue);
 
         int[][] c00 = add(sub(add(m1,m4),m5),m7);
         int[][] c01 = add(m3,m5);
