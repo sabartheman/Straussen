@@ -9,7 +9,7 @@ public class MatrixDriver {
     
     public static long bruteTime, optimizedTime,straussen2nTime;
     
-    public static final int LOOP = 9;
+    public static final int LOOP = 11;
     
     public static Random ran = new Random();
     
@@ -42,15 +42,15 @@ public class MatrixDriver {
                 }
             }    
 
-               //a recursive run of multiplication 2x2
+            //a recursive run of multiplication 2x2
             long timeS           = System.nanoTime();
             int[][] result3 = recursive(third,fourth,S);
             long timeF           = System.nanoTime();
             optimizedTime   = timeF-timeS;
+            //converting nano seconds to seconds
             double timeSeconds = optimizedTime/1000000000.000000;
             timeR[l-1] = timeSeconds;
-            //System.out.println("The time it took to recursive multiply a 2x2 matrix is: " + optimizedTime + "\nThe result of the recursive time is\n");
-            System.out.println("operating time for size "+power+" is "+timeSeconds + " seconds\nThe value of s for this is "+S);
+            System.out.println("operating time for size "+power+" is "+timeSeconds + " seconds\nThe value of s for this is "+S +"\n");
             /*
             //brute force run
             timeS = System.nanoTime();
@@ -82,7 +82,7 @@ public class MatrixDriver {
             String csvname = "time".concat(String.valueOf(u)).concat(".csv");
             
             
-            
+        //will output 10 csv files to director above src
         writeToFile(timeR,timeB,powertwo,S,csvname);
         }
     }
@@ -116,13 +116,34 @@ public class MatrixDriver {
         int n = a.length;
 
         int[][] result = new int[n][n];
-        
+        //deals with odd sized arrays
+        if((n%2 != 0 ) && (n !=1)){
+            int[][] a1, b1, c1;
+            int n1 = n+1;
+            a1 = new int[n1][n1];
+            b1 = new int[n1][n1];
+            c1 = new int[n1][n1];
+
+            for(int i=0; i<n; i++)
+                for(int j=0; j<n; j++)
+                {
+                a1[i][j] =a[i][j];
+                b1[i][j] =b[i][j];
+                }
+            c1 = recursive(a1, b1,svalue);
+            for(int i=0; i<n; i++)
+                for(int j=0; j<n; j++)
+                result[i][j] =c1[i][j];
+            return result;
+        }
+        ////////////////////
         if(n == 1)
         {
                 result[0][0] = a[0][0] * b[0][0];
         }else if(svalue >= n){
             result = multiply(a,b);
         }
+        ////normal 2^n straussen method here
         else{
 
 
@@ -135,7 +156,7 @@ public class MatrixDriver {
         int[][] B01 = new int[n/2][n/2];
         int[][] B10 = new int[n/2][n/2];
         int[][] B11 = new int[n/2][n/2];
-
+        //splitting up the matrices
         divide(a, A00, 0  ,0  );
         divide(a, A01, 0  ,n/2);
         divide(a, A10, n/2,0  );
@@ -146,9 +167,7 @@ public class MatrixDriver {
         divide(b, B10, n/2,0  );
         divide(b, B11, n/2,n/2);
 
-
-
-        ///anything below here only runs if the matrix is size 2x2
+        //recursively adds chuncked matrices
         int[][] m1 = recursive(add(A00,A11), add(B00,B11),svalue);
         int[][] m2 = recursive(add(A10,A11),B00 ,svalue);
         int[][] m3 = recursive(A00, sub(B01,B11),svalue);
@@ -171,7 +190,7 @@ public class MatrixDriver {
 
         return result;
     }
-
+    //any size matrix sumation
     public static int[][] add(int[][] a, int[][] b){
         int n = a.length;
         int[][] result = new int[n][n];
@@ -183,7 +202,7 @@ public class MatrixDriver {
         }
         return result;
     }
-
+    //any size matrix subtraction
     public static int[][] sub(int[][] a, int[][] b){
         int n = a.length;
         int[][] result = new int[n][n];
@@ -195,7 +214,7 @@ public class MatrixDriver {
         }
         return result;
     }
-
+    //any size matrix division
     public static void divide(int[][] m1, int[][] c1, int ib, int jb){
 
         for(int i1 = 0, i2=ib; i1<c1.length; i1++, i2++){
@@ -235,7 +254,7 @@ public class MatrixDriver {
         return c;
 
     }
-
+    //just the basic straussens algorithm for a 2x2 set of matrices.
     public static int[][] twonS(int[][] a, int[][] b){
         int n = a.length;
         int[][] c = new int[n][n];
@@ -256,6 +275,7 @@ public class MatrixDriver {
 
         return c;
     }
+    ///function to write to a csv file so that data can be exported easily.
     public static void writeToFile(double[] timeR,double[] timeB, int[] size,int svalue,String filename) throws FileNotFoundException{
         PrintWriter pw = new PrintWriter(new File(filename));
         StringBuilder sb = new StringBuilder();
