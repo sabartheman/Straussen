@@ -23,13 +23,18 @@ public class MatrixDriver {
         for(int u = 0; u<10;u++){
             for(int l = 1;l<LOOP;l++){
                 int power=1;
-                for(int b = 0;b<u;b++){
+                for(int b = 0;b<l;b++){
                     power = 2*power;
                 }
 
             int[][] third  = new int[power][power];
             int[][] fourth = new int[power][power]; 
-
+            
+            int S=1;
+            for(int b = 0;b<u;b++){
+                S = 2*S;
+            }
+            
             for(int i =0;i<third.length;i++){
                 for(int j=0;j<third.length;j++){
                     third[i][j]  = ran.nextInt(3);
@@ -39,13 +44,13 @@ public class MatrixDriver {
 
                //a recursive run of multiplication 2x2
             long timeS           = System.nanoTime();
-            int[][] result3 = recursive(third,fourth,power);
+            int[][] result3 = recursive(third,fourth,S);
             long timeF           = System.nanoTime();
             optimizedTime   = timeF-timeS;
             double timeSeconds = optimizedTime/1000000000.000000;
             timeR[l-1] = timeSeconds;
             //System.out.println("The time it took to recursive multiply a 2x2 matrix is: " + optimizedTime + "\nThe result of the recursive time is\n");
-            System.out.println("operating time for size "+power+" is "+timeSeconds + " seconds\n");
+            System.out.println("operating time for size "+power+" is "+timeSeconds + " seconds\nThe value of s for this is "+S);
             /*
             //brute force run
             timeS = System.nanoTime();
