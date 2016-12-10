@@ -19,61 +19,67 @@ public class MatrixDriver {
         double[] timeR = new double[LOOP-1];
         double[] timeB = new double[LOOP-1];
         int[] powertwo = new int[LOOP-1];
-        
-        for(int l = 1;l<LOOP;l++){
-            int power=1;
-            for(int b = 0;b<l;b++){
-                power = 2*power;
-            }
 
-        int[][] third  = new int[power][power];
-        int[][] fourth = new int[power][power]; 
+        for(int u = 0; u<10;u++){
+            for(int l = 1;l<LOOP;l++){
+                int power=1;
+                for(int b = 0;b<u;b++){
+                    power = 2*power;
+                }
 
-        for(int i =0;i<third.length;i++){
-            for(int j=0;j<third.length;j++){
-                third[i][j]  = ran.nextInt(3);
-                fourth[i][j] = ran.nextInt(3);
-            }
-        }    
-        
-           //a recursive run of multiplication 2x2
-        long timeS           = System.nanoTime();
-        int[][] result3 = recursive(third,fourth,power);
-        long timeF           = System.nanoTime();
-        optimizedTime   = timeF-timeS;
-        double timeSeconds = optimizedTime/1000000000.000000;
-        timeR[l-1] = timeSeconds;
-        //System.out.println("The time it took to recursive multiply a 2x2 matrix is: " + optimizedTime + "\nThe result of the recursive time is\n");
-        System.out.println("operating time for size "+power+" is "+timeSeconds + " seconds\n");
-        /*
-        //brute force run
-        timeS = System.nanoTime();
-        int[][] result4 =  multiply(third,fourth);
-        timeF = System.nanoTime();
-        bruteTime = timeF-timeS;
-        timeSeconds = bruteTime/1000000000.000000;
-        timeB[l-1] = timeSeconds;
-        System.out.println("operating time for brute force multiplying of size " + power + " is " + timeSeconds + " seconds\n");
-        */
-        powertwo[l-1] = power;
+            int[][] third  = new int[power][power];
+            int[][] fourth = new int[power][power]; 
 
-        /*
-        for(int i =0;i<third.length;i++){
-            for(int j=0;j<fourth.length;j++){
-                System.out.print("[" + result3[i][j] + "]");
-            }
-            System.out.println();
-        }
-        System.out.println();
-        for(int i =0;i<third.length;i++){
-            for(int j=0;j<fourth.length;j++){
-                System.out.print("[" + result4[i][j] + "]");
+            for(int i =0;i<third.length;i++){
+                for(int j=0;j<third.length;j++){
+                    third[i][j]  = ran.nextInt(3);
+                    fourth[i][j] = ran.nextInt(3);
+                }
+            }    
+
+               //a recursive run of multiplication 2x2
+            long timeS           = System.nanoTime();
+            int[][] result3 = recursive(third,fourth,power);
+            long timeF           = System.nanoTime();
+            optimizedTime   = timeF-timeS;
+            double timeSeconds = optimizedTime/1000000000.000000;
+            timeR[l-1] = timeSeconds;
+            //System.out.println("The time it took to recursive multiply a 2x2 matrix is: " + optimizedTime + "\nThe result of the recursive time is\n");
+            System.out.println("operating time for size "+power+" is "+timeSeconds + " seconds\n");
+            /*
+            //brute force run
+            timeS = System.nanoTime();
+            int[][] result4 =  multiply(third,fourth);
+            timeF = System.nanoTime();
+            bruteTime = timeF-timeS;
+            timeSeconds = bruteTime/1000000000.000000;
+            timeB[l-1] = timeSeconds;
+            System.out.println("operating time for brute force multiplying of size " + power + " is " + timeSeconds + " seconds\n");
+            */
+            powertwo[l-1] = power;
+
+            /*
+            for(int i =0;i<third.length;i++){
+                for(int j=0;j<fourth.length;j++){
+                    System.out.print("[" + result3[i][j] + "]");
+                }
+                System.out.println();
             }
             System.out.println();
-        }*/
+            for(int i =0;i<third.length;i++){
+                for(int j=0;j<fourth.length;j++){
+                    System.out.print("[" + result4[i][j] + "]");
+                }
+                System.out.println();
+            }*/
 
+            }
+            String csvname = "time".concat(String.valueOf(u)).concat(".csv");
+            
+            
+            
+        writeToFile(timeR,timeB,powertwo,csvname);
         }
-        writeToFile(timeR,timeB,powertwo);
     }
     ///////////////////////////////////////////////////////////////////////////
     // Brute force method to multiply any NxN matrix together
@@ -245,10 +251,10 @@ public class MatrixDriver {
 
         return c;
     }
-    public static void writeToFile(double[] timeR,double[] timeB, int[] size) throws FileNotFoundException{
-        PrintWriter pw = new PrintWriter(new File("testing.csv"));
+    public static void writeToFile(double[] timeR,double[] timeB, int[] size,String filename) throws FileNotFoundException{
+        PrintWriter pw = new PrintWriter(new File(filename));
         StringBuilder sb = new StringBuilder();
-        sb.append("Size,TimeR,TimeB,\n");
+        sb.append("Size,Time,sSize,\n");
         
         for(int i = 0; i< timeR.length;i++){
             sb.append(size[i]+",");
