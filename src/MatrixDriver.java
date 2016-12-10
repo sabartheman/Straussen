@@ -9,7 +9,7 @@ public class MatrixDriver {
     
     public static long bruteTime, optimizedTime,straussen2nTime;
     
-    public static final int LOOP = 12;
+    public static final int LOOP = 9;
     
     public static Random ran = new Random();
     
@@ -19,7 +19,7 @@ public class MatrixDriver {
         double[] timeR = new double[LOOP-1];
         double[] timeB = new double[LOOP-1];
         int[] powertwo = new int[LOOP-1];
-
+        int S=0;
         for(int u = 0; u<10;u++){
             for(int l = 1;l<LOOP;l++){
                 int power=1;
@@ -30,7 +30,7 @@ public class MatrixDriver {
             int[][] third  = new int[power][power];
             int[][] fourth = new int[power][power]; 
             
-            int S=1;
+            S=1;
             for(int b = 0;b<u;b++){
                 S = 2*S;
             }
@@ -83,7 +83,7 @@ public class MatrixDriver {
             
             
             
-        writeToFile(timeR,timeB,powertwo,csvname);
+        writeToFile(timeR,timeB,powertwo,S,csvname);
         }
     }
     ///////////////////////////////////////////////////////////////////////////
@@ -256,7 +256,7 @@ public class MatrixDriver {
 
         return c;
     }
-    public static void writeToFile(double[] timeR,double[] timeB, int[] size,String filename) throws FileNotFoundException{
+    public static void writeToFile(double[] timeR,double[] timeB, int[] size,int svalue,String filename) throws FileNotFoundException{
         PrintWriter pw = new PrintWriter(new File(filename));
         StringBuilder sb = new StringBuilder();
         sb.append("Size,Time,sSize,\n");
@@ -264,7 +264,7 @@ public class MatrixDriver {
         for(int i = 0; i< timeR.length;i++){
             sb.append(size[i]+",");
             sb.append(timeR[i]+",");
-            sb.append(timeB[i]+",\n");
+            sb.append(svalue+",\n");
         }
         
         pw.print(sb);
